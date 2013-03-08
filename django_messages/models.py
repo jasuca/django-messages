@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.db.models import signals
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import utc
 
 from django_messages.utils import get_user_model
 User = get_user_model()
@@ -82,7 +83,7 @@ class Message(models.Model):
     
     def save(self, **kwargs):
         if not self.id:
-            self.sent_at = datetime.datetime.now()
+            self.sent_at = datetime.datetime.utcnow().replace(tzinfo=utc)
         super(Message, self).save(**kwargs) 
     
     class Meta:
