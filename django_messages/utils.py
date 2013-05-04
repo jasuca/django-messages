@@ -13,6 +13,7 @@ if "mailer" in settings.INSTALLED_APPS:
 else:
     from django.core.mail import send_mail
 
+
 def format_quote(sender, body):
     """
     Wraps text at 55 chars and prepends each
@@ -28,13 +29,13 @@ def format_quote(sender, body):
         'body': quote
     }
 
+
 def format_subject(subject):
     """
     Prepends 'Re:' to the subject. To avoid multiple 'Re:'s
     a counter is added.
     NOTE: Currently unused. First step to fix Issue #48.
     FIXME: Any hints how to make this i18n aware are very welcome.
-    
     """
     subject_prefix_re = r'^Re\[(\d*)\]:\ '
     m = re.match(subject_prefix_re, subject, re.U)
@@ -50,13 +51,15 @@ def format_subject(subject):
         except:
             # if anything fails here, fall back to the old mechanism
             pass
-        
+
     return ugettext(u"Re%(prefix)s: %(subject)s") % {
-        'subject': subject, 
+        'subject': subject,
         'prefix': prefix
     }
-    
-def new_message_email(sender, instance, signal, 
+
+
+def new_message_email(
+        sender, instance, signal,
         subject_prefix=_(u'New Message: %(subject)s'),
         template_name="django_messages/new_message.html",
         default_protocol=None,
@@ -80,11 +83,13 @@ def new_message_email(sender, instance, signal,
                 'message': instance,
             })
             if instance.recipient.email != "":
-                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
-                    [instance.recipient.email,])
+                send_mail(
+                    subject, message, settings.DEFAULT_FROM_EMAIL,
+                    [instance.recipient.email, ]
+                )
         except Exception, e:
             #print e
-            pass #fail silently
+            pass  # fail silently
 
 
 def get_user_model():
